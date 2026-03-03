@@ -20,6 +20,9 @@
 build*/
 cmake-build*/
 
+# example binaries
+examples/dumper/dumper
+
 # ide
 /.idea
 /.vscode
