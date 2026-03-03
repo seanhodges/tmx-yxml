@@ -27,7 +27,8 @@ add_library(tmx
     "src/tmx_err.c"
     "src/tmx_xml.c"
     "src/tmx_mem.c"
-    "src/tmx_hash.c")
+    "src/tmx_hash.c"
+    "src/yxml.c")
 set(HEADERS "src/tmx.h")
 set_target_properties(tmx PROPERTIES VERSION ${BUILD_VERSION})
 
@@ -85,7 +86,9 @@ endif()
 
 # --  Installation
 
-target_include_directories(tmx INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> $<INSTALL_INTERFACE:include>)
+target_include_directories(tmx
+    PRIVATE   ${CMAKE_CURRENT_LIST_DIR}/src
+    INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> $<INSTALL_INTERFACE:include>)
 
 configure_file("tmxConfig.cmake.in" "tmxConfig.cmake" @ONLY)
 

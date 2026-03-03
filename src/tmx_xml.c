@@ -10,9 +10,23 @@
 #include <ctype.h>
 
 #include <libxml/xmlreader.h>
+#include <libxml/xmlmemory.h>
 
 #include "tmx.h"
 #include "tmx_utils.h"
+
+/* Temporary: configure libxml2 to use the custom tmx allocator.
+   This will be removed entirely in Phase 2 when libxml2 is replaced by yxml. */
+static void* libxml_malloc_shim(size_t len) {
+	return tmx_alloc_func(NULL, len);
+}
+
+static void setup_libxml_mem(void) {
+	xmlMemSetup((xmlFreeFunc)tmx_free_func,
+	            (xmlMallocFunc)libxml_malloc_shim,
+	            (xmlReallocFunc)tmx_alloc_func,
+	            (xmlStrdupFunc)tmx_strdup);
+}
 
 /*
 	 - Parsers -
