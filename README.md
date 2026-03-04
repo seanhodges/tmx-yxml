@@ -14,9 +14,10 @@ A portable C library to load [tiled](http://mapeditor.org) maps in your games.
 ## Dependencies
 
 This project depends on (optional) [Zlib](http://zlib.net/) with two backends:
-
+```
 cmake -B build -D WANT_LIBXML=Off (use vendored YXML)
 cmake -B build -D WANT_LIBXML=On ([LibXml2](http://xmlsoft.org) is compulsory).
+```
 
 ## Usage
 
