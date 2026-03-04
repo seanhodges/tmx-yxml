@@ -5,7 +5,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef USE_LIBXML
 #include <libxml/xmlmemory.h>
+#endif
 
 #include "tmx.h"
 #include "tmx_utils.h"
@@ -19,9 +21,11 @@ static void* tmx_malloc(size_t len) {
 	return tmx_alloc_func(NULL, len);
 }
 
+#ifdef USE_LIBXML
 void setup_libxml_mem() {
 	xmlMemSetup((xmlFreeFunc)tmx_free_func, (xmlMallocFunc)tmx_malloc, (xmlReallocFunc)tmx_alloc_func, (xmlStrdupFunc)tmx_strdup);
 }
+#endif
 
 static void* node_alloc(size_t size) {
 	void *res = tmx_alloc_func(NULL, size);

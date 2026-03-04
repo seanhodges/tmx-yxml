@@ -13,6 +13,7 @@ option(WANT_ZLIB "use zlib (ability to decompress layers data) ?" On)
 option(WANT_ZSTD "use zstd (ability to decompress layers data) ?" Off)
 option(BUILD_SHARED_LIBS "Build shared libraries (dll / so)" Off)
 option(ZSTD_PREFER_STATIC "use the static build of zstd ?" On)
+option(WANT_LIBXML "use libxml (full featured pull parser) ?" On)
 
 set(EMSCRIPTEN False)
 if(CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
@@ -25,12 +26,18 @@ add_library(tmx
     "src/tmx.c"
     "src/tmx_utils.c"
     "src/tmx_err.c"
-    "src/tmx_xml_yxml.c"
-    "src/tmx_mem_yxml.c"
-    "src/tmx_hash_yxml.c"
-    "src/yxml.c")
-set(HEADERS "src/tmx.h")
+    "src/tmx_mem.c")
+set(HEADERS "src/tmx.h" "vendor/yxml.h")
 set_target_properties(tmx PROPERTIES VERSION ${BUILD_VERSION})
+
+if(WANT_LIBXML)
+    target_sources(tmx PRIVATE src/tmx_hash.c src/tmx_xml.c)
+    add_compile_definitions("USE_LIBMXL")
+    message("Using backend libxml")
+else()
+    target_sources(tmx PRIVATE src/tmx_hash_yxml.c src/tmx_xml_yxml.c vendor/yxml.c)
+    message("Using backend yxml")
+endif(WANT_LIBXML)
 
 # -- Dependencies
 
@@ -63,8 +70,10 @@ else()
     message("zstd not wanted")
 endif()
 
-#find_package(LibXml2 REQUIRED)
-#target_link_libraries(tmx LibXml2::LibXml2)
+if(WANT_LIBXML)
+    find_package(LibXml2 REQUIRED)
+    target_link_libraries(tmx LibXml2::LibXml2)
+endif()
 
 # -- Build
 
@@ -86,10 +95,10 @@ endif()
 
 # --  Installation
 
-target_include_directories(tmx INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> $<INSTALL_INTERFACE:include>)
-#target_include_directories(tmx
-#    PRIVATE   ${CMAKE_CURRENT_LIST_DIR}/src
-#    INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> $<INSTALL_INTERFACE:include>)
+#target_include_directories(tmx INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> $<INSTALL_INTERFACE:include>)
+target_include_directories(tmx
+    PRIVATE   ${CMAKE_CURRENT_LIST_DIR}/src
+    INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/src> $<INSTALL_INTERFACE:include>)
 
 configure_file("tmxConfig.cmake.in" "tmxConfig.cmake" @ONLY)
 

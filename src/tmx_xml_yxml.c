@@ -17,7 +17,7 @@
 #include <unistd.h>
 #endif
 
-#include "yxml.h"
+#include "../vendor/yxml.h"
 #include "tmx.h"
 #include "tmx_utils.h"
 
