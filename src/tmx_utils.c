@@ -379,6 +379,9 @@ int mk_map_tile_array(tmx_map *map) {
 	if (max_ts->tileset->image) {
 		map->tilecount = max_ts->firstgid + max_ts->tileset->tilecount;
 	}
+	else if (max_ts->tileset->tilecount == 0) {
+		map->tilecount = max_ts->firstgid;
+	}
 	else {
 		/* Gets the last id, ts->tiles is sorted by id */
 		map->tilecount = max_ts->firstgid + max_ts->tileset->tiles[max_ts->tileset->tilecount - 1].id + 1;

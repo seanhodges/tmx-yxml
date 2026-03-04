@@ -131,6 +131,7 @@ resource_holder* pack_template_resource(tmx_template *value) {
 void free_property(tmx_property *p) {
 	if (p) {
 		tmx_free_func(p->name);
+		tmx_free_func(p->propertytype);
 		if (p->type == PT_STRING || p->type == PT_FILE || p->type == PT_NONE) {
 			tmx_free_func(p->value.string);
 		}
