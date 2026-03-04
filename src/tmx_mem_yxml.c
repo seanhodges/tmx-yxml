@@ -14,11 +14,10 @@ void set_alloc_functions() {
 }
 
 static void* node_alloc(size_t size) {
-	void* res = tmx_alloc_func(NULL, size);
+	void *res = tmx_alloc_func(NULL, size);
 	if (res) {
 		memset(res, 0, size);
-	}
-	else {
+	} else {
 		tmx_errno = E_ALLOC;
 	}
 	return res;
@@ -37,7 +36,7 @@ tmx_shape* alloc_shape(void) {
 }
 
 tmx_text* alloc_text(void) {
-	tmx_text* res = (tmx_text*)node_alloc(sizeof(tmx_text));
+	tmx_text *res = (tmx_text*)node_alloc(sizeof(tmx_text));
 	if (res) {
 		res->pixelsize = 16;
 		res->kerning = 1;
@@ -48,7 +47,7 @@ tmx_text* alloc_text(void) {
 }
 
 tmx_object* alloc_object(void) {
-	tmx_object* res = (tmx_object*)node_alloc(sizeof(tmx_object));
+	tmx_object *res = (tmx_object*)node_alloc(sizeof(tmx_object));
 	if (res) {
 		res->visible = 1;
 	}
@@ -60,7 +59,7 @@ tmx_object_group* alloc_objgr(void) {
 }
 
 tmx_layer* alloc_layer(void) {
-	tmx_layer* res = (tmx_layer*)node_alloc(sizeof(tmx_layer));
+	tmx_layer *res = (tmx_layer*)node_alloc(sizeof(tmx_layer));
 	if (res) {
 		res->opacity = 1.0;
 		res->visible = 1;
@@ -93,8 +92,8 @@ tmx_map* alloc_map(void) {
 	return (tmx_map*)node_alloc(sizeof(tmx_map));
 }
 
-resource_holder* pack_tileset_resource(tmx_tileset* value) {
-	resource_holder* res = node_alloc(sizeof(resource_holder));
+resource_holder* pack_tileset_resource(tmx_tileset *value) {
+	resource_holder *res = node_alloc(sizeof(resource_holder));
 	if (res) {
 		res->type = RC_TSX;
 		res->resource.tileset = value;
@@ -102,8 +101,8 @@ resource_holder* pack_tileset_resource(tmx_tileset* value) {
 	return res;
 }
 
-resource_holder* pack_template_resource(tmx_template* value) {
-	resource_holder* res = node_alloc(sizeof(resource_holder));
+resource_holder* pack_template_resource(tmx_template *value) {
+	resource_holder *res = node_alloc(sizeof(resource_holder));
 	if (res) {
 		res->type = RC_TX;
 		res->resource.template = value;
@@ -115,7 +114,7 @@ resource_holder* pack_template_resource(tmx_template* value) {
 	Node free
 */
 
-void free_property(tmx_property* p) {
+void free_property(tmx_property *p) {
 	if (p) {
 		tmx_free_func(p->name);
 		if (p->type == PT_STRING || p->type == PT_FILE || p->type == PT_NONE) {
@@ -128,11 +127,11 @@ void free_property(tmx_property* p) {
 	}
 }
 
-void free_props(tmx_properties* h) {
+void free_props(tmx_properties *h) {
 	free_hashtable((void*)h, property_deallocator);
 }
 
-void free_obj(tmx_object* o) {
+void free_obj(tmx_object *o) {
 	if (o) {
 		free_obj(o->next);
 		tmx_free_func(o->name);
@@ -168,7 +167,7 @@ void free_objgr(tmx_object_group* o) {
 	}
 }
 
-void free_image(tmx_image* i) {
+void free_image(tmx_image *i) {
 	if (i) {
 		tmx_free_func(i->source);
 		if (tmx_img_free_func) {
@@ -178,7 +177,7 @@ void free_image(tmx_image* i) {
 	}
 }
 
-void free_layers(tmx_layer* l) {
+void free_layers(tmx_layer *l) {
 	if (l) {
 		free_layers(l->next);
 		tmx_free_func(l->name);
@@ -200,10 +199,10 @@ void free_layers(tmx_layer* l) {
 	}
 }
 
-void free_tiles(tmx_tile* t, int tilecount) {
+void free_tiles(tmx_tile *t, int tilecount) {
 	int i;
 	if (t) {
-		for (i = 0; i < tilecount; i++) {
+		for (i=0; i<tilecount; i++) {
 			free_props(t[i].properties);
 			free_image(t[i].image);
 			free_obj(t[i].collision);
@@ -213,7 +212,7 @@ void free_tiles(tmx_tile* t, int tilecount) {
 	}
 }
 
-void free_ts(tmx_tileset* ts) {
+void free_ts(tmx_tileset *ts) {
 	if (ts) {
 		tmx_free_func(ts->name);
 		free_image(ts->image);
@@ -225,7 +224,7 @@ void free_ts(tmx_tileset* ts) {
 	}
 }
 
-void free_ts_list(tmx_tileset_list* tsl) {
+void free_ts_list(tmx_tileset_list *tsl) {
 	if (tsl) {
 		free_ts_list(tsl->next);
 		if (tsl->is_embedded) {
@@ -236,7 +235,7 @@ void free_ts_list(tmx_tileset_list* tsl) {
 	}
 }
 
-void free_template(tmx_template* tmpl) {
+void free_template(tmx_template *tmpl) {
 	if (tmpl) {
 		free_ts_list(tmpl->tileset_ref);
 		free_obj(tmpl->object);
@@ -244,12 +243,12 @@ void free_template(tmx_template* tmpl) {
 	tmx_free_func(tmpl);
 }
 
-void property_deallocator(void* val, const char* key UNUSED) {
+void property_deallocator(void *val, const char *key UNUSED) {
 	free_property((tmx_property*)val);
 }
 
-void resource_deallocator(void* val, const char* key UNUSED) {
-	resource_holder* rc_holder;
+void resource_deallocator(void *val, const char *key UNUSED) {
+	resource_holder *rc_holder;
 	if (val) {
 		rc_holder = (resource_holder*)val;
 		if (rc_holder->type == RC_TSX)

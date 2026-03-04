@@ -1,6 +1,5 @@
 /*
-	XML Parser using yxml — a tiny zero-allocation pull parser.
-	Replaces the previous libxml2 xmlTextReader implementation.
+	XML Parser implementation using yxml.
 
 	Each parse function returns 1 on success, 0 on failure.
 	On failure tmx_errno is set and an error message is generated.
