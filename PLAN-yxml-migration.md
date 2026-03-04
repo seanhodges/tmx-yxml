@@ -176,24 +176,24 @@ builds without libxml2 installed.
 
 ### 3.1 CMakeLists.txt
 
-- [ ] Remove `find_package(LibXml2 REQUIRED)`.
-- [ ] Remove `target_link_libraries(tmx LibXml2::LibXml2)`.
-- [ ] Verify `"src/yxml.c"` is already in the `add_library` source list
+- [x] Remove `find_package(LibXml2 REQUIRED)`.
+- [x] Remove `target_link_libraries(tmx LibXml2::LibXml2)`.
+- [x] Verify `"src/yxml.c"` is already in the `add_library` source list
       (added in Phase 1).
 
 ### 3.2 tmxConfig.cmake.in
 
-- [ ] Remove `find_dependency(LibXml2)`.
+- [x] Remove `find_dependency(LibXml2)`.
 
 ### 3.3 CI workflow (`.github/workflows/buildandtest.yaml`)
 
-- [ ] Verify the workflow does not install libxml2 explicitly (it doesn't
+- [x] Verify the workflow does not install libxml2 explicitly (it doesn't
       today — it relies on the system package). No changes expected, but
       confirm the build passes in a clean environment without libxml2-dev.
 
 ### 3.4 Verify
 
-- [ ] Full clean build from scratch (`rm -rf build && cmake -B build && cmake
+- [x] Full clean build from scratch (`rm -rf build && cmake -B build && cmake
       --build build`) succeeds without libxml2 headers/libs present.
 - [ ] All dumper tests pass.
 - [ ] C++ compatibility test passes.
