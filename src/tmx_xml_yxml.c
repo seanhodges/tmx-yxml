@@ -705,10 +705,7 @@ static int parse_object_y(yxml_t* x, const char* buf, size_t len, size_t* pos, x
 	else if ((value = get_attr(a, "class"))) obj->type = tmx_strdup(value);
 	if ((value = get_attr(a, "visible")))  obj->visible = (char)atoi(value);
 
-	if ((value = get_attr(a, "height"))) {
-		obj->obj_type = OT_SQUARE;
-		obj->height = atof(value);
-	}
+	if ((value = get_attr(a, "height")))   obj->height = atof(value);
 	if ((value = get_attr(a, "width")))    obj->width = atof(value);
 
 	if ((value = get_attr(a, "gid"))) {
